@@ -9,7 +9,8 @@ import {
   Badge,
   Collapse,
   Paper,
-  Button
+  Button,
+  Typography
 } from '@mui/material';
 import { 
   Send as SendIcon, 

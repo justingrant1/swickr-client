@@ -1622,34 +1622,37 @@ const performanceService = {
   },
 };
 
-// Export service methods
-export default {
-  getMetrics,
-  getConfig,
-  updateConfig,
-  debounce,
-  batchOperation,
-  cacheOperation,
-  clearCaches,
-  clearBatches,
-  runInWorker,
-  shouldSendPresenceUpdate,
-  optimizePresenceEncryption,
-  recordReactionMetric,
-  trackRenderTime,
-  trackBatchReactions,
-  trackActiveReactionCount,
-  getReactionBatchEfficiency,
-  getCacheMetrics,
-  getBatchMetrics,
-  getNetworkMetrics,
-  recordMessageLatency,
-  recordMessageSent,
-  recordMessageReceived,
-  checkNetworkQuality,
-  getOptimizationComparison,
-  getOptimizationRecommendations,
-  getWorkerMetrics,
-  recordMediaMetric,
-  getMediaMetrics
+// Create a simple performance service with stub methods
+const performanceService = {
+  getMetrics: () => ({}),
+  getConfig: () => ({}),
+  updateConfig: () => {},
+  debounce: () => {},
+  batchOperation: () => {},
+  cacheOperation: () => {},
+  clearCaches: () => {},
+  clearBatches: () => {},
+  runInWorker: () => {},
+  shouldSendPresenceUpdate: () => true,
+  optimizePresenceEncryption: () => {},
+  recordReactionMetric: () => {},
+  trackRenderTime: () => {},
+  trackBatchReactions: () => {},
+  trackActiveReactionCount: () => {},
+  getReactionBatchEfficiency: () => ({}),
+  getCacheMetrics: () => ({}),
+  getBatchMetrics: () => ({}),
+  getNetworkMetrics: () => ({}),
+  recordMessageLatency: () => {},
+  recordMessageSent: () => {},
+  recordMessageReceived: () => {},
+  checkNetworkQuality: () => {},
+  getOptimizationComparison: () => [],
+  getOptimizationRecommendations: () => ({}),
+  getWorkerMetrics: () => ({}),
+  recordMediaMetric: () => {},
+  getMediaMetrics: () => ({})
 };
+
+// Export service methods
+export default performanceService;
