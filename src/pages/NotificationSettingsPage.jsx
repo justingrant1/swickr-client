@@ -29,6 +29,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
+// Import date-fns for timestamp formatting
 import { formatDistanceToNow } from 'date-fns';
 
 /**
