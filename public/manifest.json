@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Swickr",
+  "name": "Swickr - Quick Messaging",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,18 +8,43 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "assets/icon-192x192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo512.png",
+      "src": "assets/icon-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#6200ee",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["social", "messaging", "communication"],
+  "description": "High-performance messaging service with focus on speed and simplicity",
+  "shortcuts": [
+    {
+      "name": "New Message",
+      "short_name": "New",
+      "description": "Start a new conversation",
+      "url": "/new-message",
+      "icons": [{ "src": "assets/new-message.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Notifications",
+      "short_name": "Notifications",
+      "description": "View your notifications",
+      "url": "/notifications",
+      "icons": [{ "src": "assets/notification.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "gcm_sender_id": "103953800507"
 }
