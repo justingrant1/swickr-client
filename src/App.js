@@ -18,6 +18,7 @@ import LoadingScreen from './components/common/LoadingScreen';
 import Settings from './pages/Settings';
 import PerformanceSettings from './pages/PerformanceSettings';
 import NotificationSettingsPage from './pages/NotificationSettingsPage';
+import DebugPage from './pages/DebugPage';
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -45,6 +46,7 @@ function App() {
                 <Register />
               </AuthProvider>
             } />
+            <Route path="/debug" element={<DebugPage />} />
             <Route path="/" element={
               <AuthProvider>
                 <ProtectedRoute />
