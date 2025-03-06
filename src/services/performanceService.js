@@ -1622,10 +1622,10 @@ const performanceService = {
   },
 };
 
-// Create a simple performance service with stub methods
-const performanceService = {
+// Export service methods directly
+export default {
   getMetrics: () => ({}),
-  getConfig: () => ({}),
+  getConfig: () => config,
   updateConfig: () => {},
   debounce: () => {},
   batchOperation: () => {},
@@ -1653,6 +1653,3 @@ const performanceService = {
   recordMediaMetric: () => {},
   getMediaMetrics: () => ({})
 };
-
-// Export service methods
-export default performanceService;
