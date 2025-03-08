@@ -45,7 +45,7 @@ const contactService = {
   // Add contact by username or email
   addContact: async (identifier) => {
     try {
-      const response = await api.post('/contacts', { identifier });
+      const response = await api.post('/contacts', { username: identifier });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Add contact error:', error);

@@ -410,7 +410,7 @@ const Home = () => {
                   src={activeConversation.avatar}
                   sx={{ bgcolor: theme.palette.primary.main, mr: 1.5 }}
                 >
-                  {activeConversation.name.charAt(0)}
+                  {activeConversation?.name?.charAt(0)}
                 </Avatar>
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -421,7 +421,7 @@ const Home = () => {
                       ? 'Typing...' 
                       : isUserOnline(activeConversation.id) 
                         ? 'Online' 
-                        : formatLastSeen(activeConversation.id)}
+                        : 'Last seen at'/*formatLastSeen(activeConversation.id)*/}
                   </Typography>
                 </Box>
                 <Tooltip title="Media Gallery">

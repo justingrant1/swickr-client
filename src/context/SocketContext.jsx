@@ -8,14 +8,14 @@ const SocketContext = createContext();
 
 /**
  * SocketProvider Component
- * 
+ *
  * Provides socket.io connection and methods to the application
  */
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const { user, isAuthenticated } = useAuth();
-  
+
   // Connect to socket when user is authenticated
   useEffect(() => {
     if (!isAuthenticated || !user) {
@@ -27,39 +27,45 @@ export const SocketProvider = ({ children }) => {
       }
       return;
     }
-    
+
+
+    let aToken = null
+    const tokens = localStorage.getItem('tokens');
+    if (tokens) {
+      const {accessToken} = JSON.parse(tokens);
+      aToken = accessToken;
+    }
+
     // Create a new socket connection
     const newSocket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:3001', {
       auth: {
-        userId: user.id,
-        username: user.username
+        token: aToken
       },
-      withCredentials: true,
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000
     });
-    
+
     // Socket event handlers
     newSocket.on('connect', () => {
       console.log('Socket connected');
       setConnected(true);
     });
-    
+
     newSocket.on('disconnect', () => {
       console.log('Socket disconnected');
       setConnected(false);
     });
-    
+
     newSocket.on('error', (error) => {
       console.error('Socket error:', error);
     });
-    
+
     // Notification events
     newSocket.on('new_notification', (notification) => {
       console.log('New notification received:', notification);
-      
+
       // Show browser notification if supported and permission granted
       if ('Notification' in window && Notification.permission === 'granted') {
         try {
@@ -72,7 +78,7 @@ export const SocketProvider = ({ children }) => {
             tag: notification.id || 'swickr-notification',
             vibrate: [100, 50, 100]
           };
-          
+
           // Create and show notification
           new Notification(title, options);
         } catch (error) {
@@ -80,14 +86,14 @@ export const SocketProvider = ({ children }) => {
         }
       }
     });
-    
+
     newSocket.on('notifications_updated', (data) => {
       console.log('Notifications updated:', data);
     });
-    
+
     // Set the socket in state
     setSocket(newSocket);
-    
+
     // Cleanup on unmount
     return () => {
       if (newSocket) {
@@ -95,9 +101,9 @@ export const SocketProvider = ({ children }) => {
       }
     };
   }, [isAuthenticated, user]);
-  
+
   // Mock socket for demo purposes
-  useEffect(() => {
+  /*useEffect(() => {
     if (!socket && isAuthenticated && user) {
       // Create a mock socket for the demo
       const mockSocket = {
@@ -125,7 +131,7 @@ export const SocketProvider = ({ children }) => {
         },
         emit: (event, data) => {
           console.log(`Mock socket emitted: ${event}`, data);
-          
+
           // For message reactions, simulate the server response
           if (event === 'message:reaction:add') {
             setTimeout(() => {
@@ -144,7 +150,7 @@ export const SocketProvider = ({ children }) => {
               }
             }, 300);
           }
-          
+
           // Simulate notification events for demo
           if (event === 'notification:read') {
             setTimeout(() => {
@@ -176,7 +182,7 @@ export const SocketProvider = ({ children }) => {
           setConnected(false);
         }
       };
-      
+
       // Simulate receiving notifications periodically for demo
       const notificationInterval = setInterval(() => {
         if (window.mockSocketListeners && window.mockSocketListeners['new_notification']) {
@@ -209,7 +215,7 @@ export const SocketProvider = ({ children }) => {
               }
             }
           ];
-          
+
           // Only send a notification 10% of the time to avoid spamming
           if (Math.random() < 0.1) {
             const randomType = mockNotificationTypes[Math.floor(Math.random() * mockNotificationTypes.length)];
@@ -224,22 +230,22 @@ export const SocketProvider = ({ children }) => {
           }
         }
       }, 30000); // Every 30 seconds
-      
+
       setSocket(mockSocket);
       setConnected(true);
-      
+
       return () => {
         clearInterval(notificationInterval);
       };
     }
-  }, [isAuthenticated, user, socket]);
-  
+  }, [isAuthenticated, user, socket]);*/
+
   // Context value
   const value = {
     socket,
     connected
   };
-  
+
   return (
     <SocketContext.Provider value={value}>
       {children}
@@ -253,7 +259,7 @@ SocketProvider.propTypes = {
 
 /**
  * useSocket Hook
- * 
+ *
  * Custom hook to use the socket context
  */
 export const useSocket = () => {
@@ -266,7 +272,7 @@ export const useSocket = () => {
 
 /**
  * useSocketConnection Hook
- * 
+ *
  * Custom hook to check if socket is connected
  */
 export const useSocketConnection = () => {

@@ -328,7 +328,7 @@ const Contacts = () => {
                       src={contact.avatar}
                       sx={{ bgcolor: theme => theme.palette.primary.main }}
                     >
-                      {contact.name.charAt(0)}
+                      {contact?.name?.charAt(0)}
                     </Avatar>
                   </Badge>
                 </ListItemAvatar>
