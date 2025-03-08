@@ -8,6 +8,32 @@ import {
   unsubscribeFromPushNotifications 
 } from '../serviceWorkerRegistration';
 
+// API base URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+    (config) => {
+      const tokens = localStorage.getItem('tokens');
+      if (tokens) {
+        const { accessToken } = JSON.parse(tokens);
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+);
+
 const NotificationContext = createContext();
 
 /**
@@ -161,7 +187,7 @@ export const NotificationProvider = ({ children }) => {
     
     setLoading(true);
     try {
-      const response = await axios.get('/api/notifications');
+      const response = await api.get('/notifications');
       setNotifications(response.data);
       
       // Calculate unread count
@@ -181,7 +207,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      const response = await axios.get('/api/notifications/settings');
+      const response = await api.get('/notifications/settings');
       setSettings(response.data);
     } catch (error) {
       console.error('Error fetching notification settings:', error);
@@ -197,7 +223,7 @@ export const NotificationProvider = ({ children }) => {
     
     setMetricsLoading(true);
     try {
-      const response = await axios.get(`/api/notifications/performance?timeRange=${timeRange}`, {
+      const response = await api.get(`/notifications/performance?timeRange=${timeRange}`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -227,7 +253,7 @@ export const NotificationProvider = ({ children }) => {
     }
     
     try {
-      const response = await axios.post('/api/notifications/performance/test', {
+      const response = await api.post('/notifications/performance/test', {
         count: options.count || 5,
         delay: options.delay || 500,
         simulateClient: options.simulateClient !== false
@@ -260,7 +286,7 @@ export const NotificationProvider = ({ children }) => {
     }
     
     try {
-      const response = await axios.get('/api/notifications/performance/test/status', {
+      const response = await api.get('/notifications/performance/test/status', {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -289,7 +315,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated || !notificationId || !eventType) return;
     
     try {
-      await axios.post('/api/notifications/client/events', {
+      await api.post('/notifications/client/events', {
         notificationId,
         eventType,
         metadata
@@ -311,7 +337,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      await axios.put(`/api/notifications/${id}/read`);
+      await api.put(`/notifications/${id}/read`);
       
       // Update local state
       setNotifications(prev => 
@@ -341,7 +367,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      await axios.put('/api/notifications/read-all');
+      await api.put('/notifications/read-all');
       
       // Update local state
       setNotifications(prev => 
@@ -364,7 +390,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      await axios.delete(`/api/notifications/${id}`);
+      await api.delete(`/notifications/${id}`);
       
       // Update local state
       setNotifications(prev => prev.filter(notification => notification.id !== id));
@@ -385,7 +411,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      await axios.put('/api/notifications/settings', updatedSettings);
+      await api.put('/notifications/settings', updatedSettings);
       setSettings(updatedSettings);
     } catch (error) {
       console.error('Error updating notification settings:', error);
@@ -402,7 +428,7 @@ export const NotificationProvider = ({ children }) => {
     
     try {
       // Get VAPID public key from server
-      const response = await axios.get('/api/notifications/vapid-public-key');
+      const response = await api.get('/notifications/vapid-public-key');
       const publicVapidKey = response.data.publicKey;
       
       // Subscribe to push notifications
@@ -416,7 +442,7 @@ export const NotificationProvider = ({ children }) => {
       }
       
       // Send subscription to server
-      await axios.post('/api/notifications/subscribe', {
+      await api.post('/notifications/subscribe', {
         subscription: {
           endpoint: subscription.endpoint,
           keys: {
@@ -451,7 +477,7 @@ export const NotificationProvider = ({ children }) => {
       }
       
       // Notify server
-      await axios.post('/api/notifications/unsubscribe');
+      await api.post('/notifications/unsubscribe');
       
       setPushEnabled(false);
       return true;
@@ -501,7 +527,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      const response = await axios.post('/api/notifications/test', {}, {
+      const response = await api.post('/notifications/test', {}, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -521,7 +547,7 @@ export const NotificationProvider = ({ children }) => {
     if (!isAuthenticated) return;
     
     try {
-      const response = await axios.post('/api/notifications/performance/reset', {}, {
+      const response = await api.post('/notifications/performance/reset', {}, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
